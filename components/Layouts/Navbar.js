@@ -1,193 +1,136 @@
-import React, { Component } from 'react';
+
+import { useEffect, useState } from "react";
+import { ethers } from "ethers";
 import Link from '../../utils/ActiveLink';
-import { useRouter } from 'next/router'
 
-class Navbar extends Component {
-    // Navbar 
-    _id = '';
-    _isMounted = false;
+function Navbar() {
+  const [walletAddress, setWalletAddress] = useState("");
+  const [signer, setSigner] = useState(undefined);
 
-    state = {
-        display: false,
-        collapsed: true
-    };
+  useEffect(() => {
+    getCurrentWalletConnected();
+    addWalletListener();
+  }, [walletAddress]);
 
-    toggleNavbar = () => {
-        this.setState({
-            collapsed: !this.state.collapsed,
+  const connectWallet = async () => {
+    if (typeof window != "undefined" && typeof window.ethereum != "undefined") {
+      try {
+        /* MetaMask is installed */
+        const accounts = await window.ethereum.request({
+          method: "eth_requestAccounts",
         });
+        setWalletAddress(accounts[0]);
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        setSigner(provider.getSigner());
+      } catch (err) {
+        console.error(err.message);
+      }
+    } else {
+      /* MetaMask is not installed */
+      console.log("Please install MetaMask");
     }
+  };
 
-    componentDidMount() {
-        this._id = localStorage.getItem("mykey");
-        console.log(this._id)
-        let elementId = document.getElementById("navbar");
-        document.addEventListener("scroll", () => {
-            if (window.scrollY > 170) {
-                elementId.classList.add("is-sticky");
-            } else {
-                elementId.classList.remove("is-sticky");
-            }
+  const getCurrentWalletConnected = async () => {
+    if (typeof window != "undefined" && typeof window.ethereum != "undefined") {
+      try {
+        const accounts = await window.ethereum.request({
+          method: "eth_accounts",
         });
-    }
-
-    componentWillUnmount() {
-        this._isMounted = false;
-    }
-
-    render() {
-        const { collapsed } = this.state;
-        const classOne = collapsed ? 'collapse navbar-collapse' : 'collapse navbar-collapse show';
-        const classTwo = collapsed ? 'navbar-toggler navbar-toggler-right collapsed' : 'navbar-toggler navbar-toggler-right';
-        if (this._id  != null){
-            return (
-                <>
-                    <div id="navbar" className="navbar-area">
-                        <div className="luvion-nav">
-                            <div className="container">
-                                <nav className="navbar navbar-expand-md navbar-light">
-                                    <Link href="/">
-                                        <a className="navbar-brand">
-                                            <img src="/images/logo.png" alt="logo" />
-                                            <img src="/images/black-logo.png" alt="logo" />
-                                        </a>
-                                    </Link>
-
-                                    <button 
-                                        onClick={this.toggleNavbar} 
-                                        className={classTwo}
-                                        type="button" 
-                                        data-toggle="collapse" 
-                                        data-target="#navbarSupportedContent" 
-                                        aria-controls="navbarSupportedContent" 
-                                        aria-expanded="false" 
-                                        aria-label="Toggle navigation"
-                                    >
-                                        <span className="icon-bar top-bar"></span>
-                                        <span className="icon-bar middle-bar"></span>
-                                        <span className="icon-bar bottom-bar"></span>
-                                    </button>
-
-                                    <div className={classOne} id="navbarSupportedContent">
-                                        <ul className="navbar-nav">
-                                            <li className="nav-item">
-                                                <Link href="/" activeClassName="active">
-                                                    <a className="nav-link">Home</a>
-                                                </Link>
-                                            </li>
-
-                                            <li className="nav-item">
-                                                <Link href="/about-us" activeClassName="active">
-                                                    <a className="nav-link">Sobre</a>
-                                                </Link>
-                                            </li>
-
-                                            <li className="nav-item">
-                                                <Link href="/contact" activeClassName="active">
-                                                    <a className="nav-link">Contact</a>
-                                                </Link>
-                                            </li>
-                                        </ul>
-                                    </div>
-
-                                    <div className="others-options">
-                                        <Link href="/profile">
-                                            <a className="login-btn">
-                                                <i className="flaticon-user"></i> Profile
-                                            </a>
-                                        </Link>
-                                    </div>
-
-                                    <div className="others-options">
-                                        <button type="sair" className="btn btn-primary" onClick={() => {localStorage.clear();}}>
-                                            <Link href="/">
-                                                <a className="login-btn">
-                                                    <i className="flaticon-cancel"></i> Sair
-                                                </a>
-                                            </Link>
-                                        </button>
-                                    </div>
-                                </nav>
-                            </div>
-                        </div>
-                    </div>
-                </>
-            );
+        if (accounts.length > 0) {
+            setWalletAddress(accounts[0]);
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
+            setSigner(provider.getSigner());;
+        } else {
+          console.log("Connect to MetaMask using the Connect button");
         }
-        else if (this._id  == null){
-            return (
-                <>
-                    <div id="navbar" className="navbar-area">
-                        <div className="luvion-nav">
-                            <div className="container">
-                                <nav className="navbar navbar-expand-md navbar-light">
-                                    <Link href="/">
-                                        <a className="navbar-brand">
-                                            <img src="/images/logo.png" alt="logo" />
-                                            <img src="/images/black-logo.png" alt="logo" />
-                                        </a>
-                                    </Link>
-
-                                    <button 
-                                        onClick={this.toggleNavbar} 
-                                        className={classTwo}
-                                        type="button" 
-                                        data-toggle="collapse" 
-                                        data-target="#navbarSupportedContent" 
-                                        aria-controls="navbarSupportedContent" 
-                                        aria-expanded="false" 
-                                        aria-label="Toggle navigation"
-                                    >
-                                        <span className="icon-bar top-bar"></span>
-                                        <span className="icon-bar middle-bar"></span>
-                                        <span className="icon-bar bottom-bar"></span>
-                                    </button>
-
-                                    <div className={classOne} id="navbarSupportedContent">
-                                        <ul className="navbar-nav">
-                                            <li className="nav-item">
-                                                <Link href="/" activeClassName="active">
-                                                    <a className="nav-link">Home</a>
-                                                </Link>
-                                            </li>
-
-                                            <li className="nav-item">
-                                                <Link href="/about-us" activeClassName="active">
-                                                    <a className="nav-link">Sobre</a>
-                                                </Link>
-                                            </li>
-
-                                            <li className="nav-item">
-                                                <Link href="/contact" activeClassName="active">
-                                                    <a className="nav-link">Contact</a>
-                                                </Link>
-                                            </li>
-                                        </ul>
-                                    </div>
-
-                                    <div className="others-options">
-                                        <Link href="/login">
-                                            <a className="login-btn">
-                                                <i className="flaticon-user"></i> Login
-                                            </a>
-                                        </Link>
-                                    </div>
-
-                                    <div className="others-options">
-                                        <Link href="/sign-up">
-                                            <a className="login-btn">
-                                                <i className="flaticon-user"></i> Sign Up
-                                            </a>
-                                        </Link>
-                                    </div>
-                                </nav>
-                            </div>
-                        </div>
-                    </div>
-                </>
-            );
-        }
+      } catch (err) {
+        console.error(err.message);
+      }
+    } else {
+      /* MetaMask is not installed */
+      console.log("Please install MetaMask");
     }
+  };
+
+  const addWalletListener = async () => {
+    if (typeof window != "undefined" && typeof window.ethereum != "undefined") {
+      window.ethereum.on("accountsChanged", (accounts) => {
+        setWalletAddress(accounts[0]);
+        console.log(accounts[0]);
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        setSigner(provider.getSigner());
+      });
+    } else {
+      /* MetaMask is not installed */
+      setWalletAddress("");
+      console.log("Please install MetaMask");
+    }
+  };
+
+  return (
+    <>
+    <div id="navbar" className="navbar-area">
+        <div className="luvion-nav">
+            <div className="container">
+                <nav className="navbar navbar-expand-md navbar-light">
+                    <Link href="/">
+                        <a className="navbar-brand">
+                            <img src="/images/logo.png" alt="logo" />
+                            <img src="/images/black-logo.png" alt="logo" />
+                        </a>
+                    </Link>
+
+                    <div className={"collapse navbar-collapse"} id="navbarSupportedContent">
+                        <ul className="navbar-nav">
+                            <li className="nav-item">
+                                <Link href="/" activeClassName="active">
+                                    <a className="nav-link">Home</a>
+                                </Link>
+                            </li>
+
+                            <li className="nav-item">
+                                <Link href="/about-us" activeClassName="active">
+                                    <a className="nav-link">Sobre</a>
+                                </Link>
+                            </li>
+
+                            <li className="nav-item">
+                                <Link href="/contact" activeClassName="active">
+                                    <a className="nav-link">Contact</a>
+                                </Link>
+                            </li>
+
+                            <li className="nav-item">
+                                <Link href="/profile" activeClassName="active">
+                                    <a className="nav-link">
+                                        {walletAddress && walletAddress.length > 0
+                                        ? "Profile"
+                                        : ""}
+                                    </a>
+                                </Link>
+                            </li>
+
+                            <li className="nav-item">
+                                <button type="connect" className="btn btn-primary" onClick={connectWallet}>
+                                    <li>
+                                        {walletAddress && walletAddress.length > 0
+                                        ? `Connected: ${walletAddress.substring(
+                                            0,
+                                            6
+                                        )}...${walletAddress.substring(38)}`
+                                        : "Connect Wallet"}
+                                    </li>
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+</>
+  );
 }
 
 export default Navbar;
