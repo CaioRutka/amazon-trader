@@ -10,9 +10,17 @@ export default class PaymentExperience extends Component {
                         <div className="row align-items-center">
                             <div className="col-lg-5 col-md-12">
                                 <div className="payment-experience-content">
-                                    <h2>Deixe seu dinheiro lhe trazer mais dinheiro.</h2>
-                                    <p>Com a Amazon Trader FX voce da ao seu dinheiro a liberdade de lhe trazer mais dinheiro. Sem investimento minimo e sem invetimento maximo, nós da Amazon Trader FX vamos lhe dar lucros diários.</p>
-                                    <p>Imagine ter uma rentabilidade alta, com lucros diários, e eternamente ?</p>
+                                    <h2>AMAZON TRADER FX CONECT WALLET</h2>
+                                    <p> Venha fazer parte desta plataforma automatica de investimentos, 
+                                        onde o seu lucro é diario e creditado de forma 100% automatica,
+                                        cinco dias por semana, direto em sua e-wallet cadastrada.</p>
+
+                                    <p> Cadastre-se utilizando apenas a sua E-wallet USDT Tron
+                                        e receba o seu lucro diariamente de forma automatica.</p>
+
+                                    <p> Rendimentos variaveis acima de 0.3% ao dia, 
+                                        depositados de segunda a sexta-feira em sua E-wallet USDT Tron.
+                                        Depositos apartir de 50 dolares somente em USDT Tron.</p>
                                 </div>
                             </div>
 

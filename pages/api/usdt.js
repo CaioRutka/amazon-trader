@@ -4,11 +4,20 @@ const abi = [{"inputs":[],"payable":false,"stateMutability":"nonpayable","type":
 const contractUSDT = "0x7ef95a0FEE0Dd31b22626fA2e10Ee6A223F8a684";
 const contractAmazonTrader = "0xB4b1701DF51B8aC786CC84C7E6568d83BDA4281d";
 
-const approveUSDT = async (amount, signer) => {
-    try {
-        const contract = new ethers.Contract(contractUSDT, abi, signer);    
+const hexToDecimal = hex => parseInt(hex, 16);
 
-        await contract.approve(contractAmazonTrader, amount);
+const approveUSDT = async (address, amount, signer) => {
+    try {
+        const contract = new ethers.Contract(contractUSDT, abi, signer);   
+        
+        const allowance = await contract.allowance(address, contractAmazonTrader);
+
+        if (hexToDecimal(allowance._hex) < amount)
+        {
+          await contract.approve(contractAmazonTrader, amount);
+        } else {
+          
+        }        
       } catch (error) {
         console.log(error);
       }    
