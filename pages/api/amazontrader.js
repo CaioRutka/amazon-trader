@@ -1,4 +1,7 @@
 import { ethers } from "ethers";
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+const MySwal = withReactContent(Swal)
 
 const abi = [
 	{
@@ -273,6 +276,17 @@ const abi = [
 	}
 ];
 
+const alertContent = (failOrNot, message, selected_icon) => {
+    MySwal.fire({
+        title: failOrNot,
+        text: message,
+        icon: selected_icon,
+        timer: 2000,
+        timerProgressBar: true,
+        showConfirmButton: false,
+    })
+}
+
 const contractAmazonTrader = "0xB4b1701DF51B8aC786CC84C7E6568d83BDA4281d";
 
 const addInvestor = async (address, signer) => {
@@ -280,22 +294,23 @@ const addInvestor = async (address, signer) => {
         const contract = new ethers.Contract(contractAmazonTrader, abi, signer);    
 
         await contract.addInvestor(address);
+
+		alertContent("Parabens!", "Registrado com sucesso!", "success");
       } catch (error) {
-        console.log(error);
-      }    
-    
+        alertContent("Erro", error.reason, "warning");
+      }     
 }; 
 
 const invest_amazon = async (amount, signer) => {
   try {
       const contract = new ethers.Contract(contractAmazonTrader, abi, signer);    
-
       await contract.invest(amount);
+
+	  alertContent("Parabens!", "Investiu com sucesso!", "success");
     } catch (error) {
-      console.log(error);
-    }    
-  
-}; 
+		alertContent("Erro", error.reason, "warning");
+    }  
+};
 
 module.exports = {
   addInvestor,
