@@ -1,6 +1,7 @@
-
 import { useEffect, useState } from "react";
 import { ethers } from "ethers";
+
+import { ownerWallet, chainId } from "../../utils/walletAddress";
 import Link from '../../utils/ActiveLink';
 
 function Navbar() {
@@ -10,6 +11,7 @@ function Navbar() {
   useEffect(() => {
     getCurrentWalletConnected();
     addWalletListener();
+    checkNetwork();
   }, [walletAddress]);
 
   const connectWallet = async () => {
@@ -68,6 +70,28 @@ function Navbar() {
     }
   };
 
+  const checkNetwork = async () => {
+    if (window.ethereum) {
+      const currentChainId = await window.ethereum.request({
+        method: 'eth_chainId',
+      });  
+      // return true if network id is the same
+      if (currentChainId == `0x${Number(chainId).toString(16)}`) {
+      } else if (currentChainId != `0x${Number(chainId).toString(16)}`) {
+        switchNetwork();
+      }
+    }    
+  };
+
+  const switchNetwork = async () => {
+    await window.ethereum.request({
+      method: 'wallet_switchEthereumChain',
+      params: [{ chainId: `0x${Number(43113).toString(16)}` }],
+    });
+    // refresh
+    window.location.reload();
+  };
+  
   return (
     <>
     <div id="navbar" className="navbar-area">
@@ -104,8 +128,28 @@ function Navbar() {
                             <li className="nav-item">
                                 <Link href="/profile" activeClassName="active">
                                     <a className="nav-link">
-                                        {walletAddress && walletAddress.length > 0
+                                        {walletAddress && walletAddress.length > 0 && walletAddress != ownerWallet
                                         ? "Profile"
+                                        : ""}
+                                    </a>
+                                </Link>
+                            </li>
+
+                            <li className="nav-item">
+                                <Link href="/admin" activeClassName="active">
+                                    <a className="nav-link">
+                                        {walletAddress && walletAddress.length > 0 && walletAddress == ownerWallet
+                                        ? "Admin"
+                                        : ""}
+                                    </a>
+                                </Link>
+                            </li>
+
+                            <li className="nav-item">
+                                <Link href="/profile" activeClassName="active">
+                                    <a className="nav-link">
+                                        {walletAddress && walletAddress.length > 0 && walletAddress == ownerWallet
+                                        ? ""
                                         : ""}
                                     </a>
                                 </Link>

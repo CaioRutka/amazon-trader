@@ -13,17 +13,6 @@ const invest_initial = {
     amount: "",
 }
 
-const alertContent = (message) => {
-    MySwal.fire({
-        title: 'Congratulations!',
-        text: message,
-        icon: 'success',
-        timer: 2000,
-        timerProgressBar: true,
-        showConfirmButton: false,
-    })
-}
-
 function Profile() {
     const [walletAddress, setWalletAddress] = useState("");
     const [signer, setSigner] = useState(undefined);

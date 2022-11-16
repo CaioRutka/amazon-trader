@@ -1,191 +1,137 @@
-import React, { Component } from 'react';
+
+import { useEffect, useState } from "react";
+
+import { ownerWallet } from "../../utils/walletAddress";
 import Link from '../../utils/ActiveLink';
-import { useRouter } from 'next/router'
-class Navbar extends Component {
-    // Navbar 
-    _id = '';
-    _isMounted = false;
 
-    state = {
-        display: false,
-        collapsed: true
-    };
+function Navbar() {
+  const [walletAddress, setWalletAddress] = useState("");
+  const [signer, setSigner] = useState(undefined);
 
-    toggleNavbar = () => {
-        this.setState({
-            collapsed: !this.state.collapsed,
-        });
-    }
+  useEffect(() => {
+    getCurrentWalletConnected();
+  }, [walletAddress]);
 
-    componentDidMount() {
-        this._id = localStorage.getItem("mykey");
-        console.log(this._id)
-        let elementId = document.getElementById("navbar");
-        document.addEventListener("scroll", () => {
-            if (window.scrollY > 170) {
-                elementId.classList.add("is-sticky");
-            } else {
-                elementId.classList.remove("is-sticky");
-            }
-        });
-    }
+  const connectWallet = async () => {
+    let tronWeb;
 
-    componentWillUnmount() {
-        this._isMounted = false;
-    }
-
-    render() {
-        const { collapsed } = this.state;
-        const classOne = collapsed ? 'collapse navbar-collapse' : 'collapse navbar-collapse show';
-        const classTwo = collapsed ? 'navbar-toggler navbar-toggler-right collapsed' : 'navbar-toggler navbar-toggler-right';
-        if (this._id  != null){
-            return (
-                <>
-                    <div id="navbar" className="navbar-area">
-                        <div className="luvion-nav">
-                            <div className="container">
-                                <nav className="navbar navbar-expand-md navbar-light">
-                                    <Link href="/">
-                                        <a className="navbar-brand">
-                                            <img src="/images/logo.png" alt="logo" />
-                                            <img src="/images/black-logo.png" alt="logo" />
-                                        </a>
-                                    </Link>
-
-                                    <button 
-                                        onClick={this.toggleNavbar} 
-                                        className={classTwo}
-                                        type="button" 
-                                        data-toggle="collapse" 
-                                        data-target="#navbarSupportedContent" 
-                                        aria-controls="navbarSupportedContent" 
-                                        aria-expanded="false" 
-                                        aria-label="Toggle navigation"
-                                    >
-                                        <span className="icon-bar top-bar"></span>
-                                        <span className="icon-bar middle-bar"></span>
-                                        <span className="icon-bar bottom-bar"></span>
-                                    </button>
-
-                                    <div className={classOne} id="navbarSupportedContent">
-                                        <ul className="navbar-nav">
-                                            <li className="nav-item">
-                                                <Link href="/" activeClassName="active">
-                                                    <a className="nav-link">Home</a>
-                                                </Link>
-                                            </li>
-
-                                            <li className="nav-item">
-                                                <Link href="/about-us" activeClassName="active">
-                                                    <a className="nav-link">Sobre</a>
-                                                </Link>
-                                            </li>
-
-                                            <li className="nav-item">
-                                                <Link href="/contact" activeClassName="active">
-                                                    <a className="nav-link">Contact</a>
-                                                </Link>
-                                            </li>
-                                            <li>
-                                                <Link href="/profile">
-                                                <a className="login-btn">
-                                                    <i className="flaticon-user"></i> Profile
-                                                </a>
-                                                </Link>
-                                            </li>
-
-                                            <li>
-                                                <button type="sair" className="btn btn-primary" onClick={() => {localStorage.clear();}}>
-                                                    <Link href="/">
-                                                        <a className="login-btn">
-                                                            <i className="flaticon-cancel"></i> Sair
-                                                        </a>
-                                                    </Link>
-                                                </button>                                                
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </nav>
-                            </div>
-                        </div>
-                    </div>
-                </>
-            );
+    if (window.tronWeb) {
+      if (window.tronLink.ready){
+        tronWeb = tronLink.tronWeb;   
+        setWalletAddress(tronWeb.defaultAddress.base58);     
+      } 
+      else 
+      {
+      const res = await tronLink.request({ method: 'tron_requestAccounts' });
+      if (res.code === 200) {
+        tronWeb = tronLink.tronWeb;
+        setWalletAddress(tronWeb.defaultAddress.base58);     
         }
-        else if (this._id  == null){
-            return (
-                <>
-                    <div id="navbar" className="navbar-area">
-                        <div className="luvion-nav">
-                            <div className="container">
-                                <nav className="navbar navbar-expand-md navbar-light">
-                                    <Link href="/">
-                                        <a className="navbar-brand">
-                                            <img src="/images/logo.png" alt="logo" />
-                                            <img src="/images/black-logo.png" alt="logo" />
-                                        </a>
-                                    </Link>
-
-                                    <button 
-                                        onClick={this.toggleNavbar} 
-                                        className={classTwo}
-                                        type="button" 
-                                        data-toggle="collapse" 
-                                        data-target="#navbarSupportedContent" 
-                                        aria-controls="navbarSupportedContent" 
-                                        aria-expanded="false" 
-                                        aria-label="Toggle navigation"
-                                    >
-                                        <span className="icon-bar top-bar"></span>
-                                        <span className="icon-bar middle-bar"></span>
-                                        <span className="icon-bar bottom-bar"></span>
-                                    </button>
-
-                                    <div className={classOne} id="navbarSupportedContent">
-                                        <ul className="navbar-nav">
-                                            <li className="nav-item">
-                                                <Link href="/" activeClassName="active">
-                                                    <a className="nav-link">Home</a>
-                                                </Link>
-                                            </li>
-
-                                            <li className="nav-item">
-                                                <Link href="/about-us" activeClassName="active">
-                                                    <a className="nav-link">Sobre</a>
-                                                </Link>
-                                            </li>
-
-                                            <li className="nav-item">
-                                                <Link href="/contact" activeClassName="active">
-                                                    <a className="nav-link">Contact</a>
-                                                </Link>
-                                            </li>
-                                        </ul>
-                                    </div>
-
-                                    <div className="others-options">
-                                        <Link href="/login">
-                                            <a className="login-btn">
-                                                <i className="flaticon-user"></i> Login
-                                            </a>
-                                        </Link>
-                                    </div>
-
-                                    <div className="others-options">
-                                        <Link href="/sign-up">
-                                            <a className="login-btn">
-                                                <i className="flaticon-user"></i> Sign Up
-                                            </a>
-                                        </Link>
-                                    </div>
-                                </nav>
-                            </div>
-                        </div>
-                    </div>
-                </>
-            );
-        }
+      } 
+    } else {
+      console.log("Please install TronLink");
     }
+  };
+
+  const getCurrentWalletConnected = async () => {
+    let tronWeb;
+
+    if (window.tronWeb) {
+      if (window.tronLink.ready){
+        tronWeb = tronLink.tronWeb;   
+        setWalletAddress(tronWeb.defaultAddress.base58);     
+      } 
+      else 
+      {
+        console.log("Connect to TronLink using the Connect button");
+      } 
+    } else {
+      console.log("Please install TronLink");
+    }
+  };
+  
+  return (
+    <>
+    <div id="navbar" className="navbar-area">
+        <div className="luvion-nav">
+            <div className="container">
+                <nav className="navbar navbar-expand-md navbar-light">
+                    <Link href="/">
+                        <a className="navbar-brand">
+                            <img src="/images/logo.png" alt="logo" />
+                            <img src="/images/black-logo.png" alt="logo" />
+                        </a>
+                    </Link>
+
+                    <div className={"collapse navbar-collapse"} id="navbarSupportedContent">
+                        <ul className="navbar-nav">
+                            <li className="nav-item">
+                                <Link href="/" activeClassName="active">
+                                    <a className="nav-link">Home</a>
+                                </Link>
+                            </li>
+
+                            <li className="nav-item">
+                                <Link href="/about-us" activeClassName="active">
+                                    <a className="nav-link">Sobre</a>
+                                </Link>
+                            </li>
+
+                            <li className="nav-item">
+                                <Link href="/contact" activeClassName="active">
+                                    <a className="nav-link">Contact</a>
+                                </Link>
+                            </li>
+
+                            <li className="nav-item">
+                                <Link href="/profile" activeClassName="active">
+                                    <a className="nav-link">
+                                        {walletAddress && walletAddress.length > 0 && walletAddress != ownerWallet
+                                        ? "Profile"
+                                        : ""}
+                                    </a>
+                                </Link>
+                            </li>
+
+                            <li className="nav-item">
+                                <Link href="/admin" activeClassName="active">
+                                    <a className="nav-link">
+                                        {walletAddress && walletAddress.length > 0 && walletAddress == ownerWallet
+                                        ? "Admin"
+                                        : ""}
+                                    </a>
+                                </Link>
+                            </li>
+
+                            <li className="nav-item">
+                                <button type="connect" className="btn btn-primary" onClick={connectWallet}>
+                                    <div className = "d-flex align-items-center wallet-menu-item selected">
+                                      <div className = "wallet-item-info d-flex align-items-center">
+                                        <div className="p-2 pt-0 pb-0">
+                                          <img className="d-flex d1" src = "/images/n-tron3.1c1cc038.png" alt=""/>
+                                        </div>
+                                        <div className="d-flex d2">
+                                          <span className="color">
+                                          {walletAddress && walletAddress.length > 0
+                                        ? `Connected: ${walletAddress.substring(
+                                            0,
+                                            6
+                                        )}...${walletAddress.substring(38)}`
+                                        : "Connect Wallet"}
+                                          </span>
+                                        </div>
+                                        </div>
+                                    </div>
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+</>
+  );
 }
 
 export default Navbar;
