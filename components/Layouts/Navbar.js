@@ -4,6 +4,22 @@ import { ethers } from "ethers";
 import { ownerWallet, chainId } from "../../utils/walletAddress";
 import Link from '../../utils/ActiveLink';
 
+const networks = {
+  avax: {
+    chainId: `0x${Number(43113).toString(16)}`,
+    chainName: "Avalanche FUJI C-Chain",
+    nativeCurrency: {
+      name: "AVAX Token",
+      symbol: "AVAX",
+      decimals: 18
+    },
+    rpcUrls: [
+      "https://api.avax-test.network/ext/bc/C/rpc"
+    ],
+    blockExplorerUrls: ["https://testnet.snowtrace.io/"]
+  }
+};
+
 function Navbar() {
   const [walletAddress, setWalletAddress] = useState("");
   const [signer, setSigner] = useState(undefined);
@@ -78,18 +94,34 @@ function Navbar() {
       // return true if network id is the same
       if (currentChainId == `0x${Number(chainId).toString(16)}`) {
       } else if (currentChainId != `0x${Number(chainId).toString(16)}`) {
-        switchNetwork();
+        switchNetwork(currentChainId);
       }
     }    
   };
 
   const switchNetwork = async () => {
+    try{
     await window.ethereum.request({
       method: 'wallet_switchEthereumChain',
-      params: [{ chainId: `0x${Number(43113).toString(16)}` }],
+      params: [{ chainId: `0x${Number(43113).toString(16)}`}],
     });
-    // refresh
     window.location.reload();
+  } catch (err) {
+    if (err.code == 4902){
+      await window.ethereum.request({
+        method: "wallet_addEthereumChain",
+        params: [
+          {
+            ...networks["avax"]
+          }
+        ]
+      });
+      // refresh
+      window.location.reload();
+    }
+  }
+    // refresh
+    
   };
   
   return (
