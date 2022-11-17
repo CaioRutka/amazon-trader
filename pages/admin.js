@@ -83,8 +83,8 @@ function Profile() {
 
     const getBalance = async e => {
         try {
-            const res = await admin_getBalance(signer);  
-            setNumberContractBalance(res); 
+            const size = await admin_getBalance(signer);
+            setNumberContractBalance(size/10**18);
         } catch (error) {
             console.log(error)
         }
@@ -92,8 +92,8 @@ function Profile() {
 
     const getSize = async e => {
         try {
-            const res = await admin_getSize(signer);  
-            setNumberOfInvestors(res); 
+            const size = await admin_getSize(signer);
+            setNumberOfInvestors(size);
         } catch (error) {
             console.log(error)
         }
@@ -102,8 +102,6 @@ function Profile() {
     useEffect(() => {
         getCurrentWalletConnected();
         addWalletListener();
-        getBalance();
-        getSize();
     }, [walletAddress]);
 
     const handleChangeInvest = e => {
@@ -182,26 +180,30 @@ function Profile() {
                 <div className="bg-map">
                     <img src="/images/bg-map.png" alt="image" />
                 </div>
-                
-                <div className="container">
-                    <div className="about-area" >
-                        <h2>Investors: {numberOfInvestors}</h2>
-                    </div>
-                </div>
 
                 <div className="container">
-                    <div className="about-area">
-                        <h2>Balance: {numberContractBalance} USDT</h2>
+                        <div className="row align-items-center">
+                            <div className="col-lg-6 col-md-12">
+                                <h2>Investidores: {numberOfInvestors}</h2>
+                                <h2>Balanço: {numberContractBalance} USDT</h2>
+                            </div>  
+                            <div className="col-lg-6 col-md-12">
+                                <div className="about-content">
+                                    <h4 className="pb-5"> Reiniciar Investidores e Balanço.</h4>
+                                    <button type="register" className="btn btn-primary" onClick={() => {getBalance(); getSize();}}>
+                                        Reload
+                                    </button>
+                                </div>                              
+                            </div>
+                        </div>
                     </div>
-                </div>
 
                 <div className="about-area ptb-70">
                     <div className="container">
                         <div className="row align-items-center">
                             <div className="col-lg-6 col-md-12">
                                 <div className="about-content">
-                                    <h4> Registro</h4>
-                                    <input className="form-control" disabled = "disabled"></input>
+                                    <h4 className="pb-5"> Registro</h4>
                                     <button type="register" className="btn btn-primary" onClick={() => {addInvestor(walletAddress, signer)}}>
                                         Registrar
                                     </button>
@@ -221,7 +223,7 @@ function Profile() {
                                                     className="form-control" 
                                                     value={invest.amount}
                                                     onChange={handleChangeInvest}
-                                                    ref={register({ required: true })}
+                                                    ref={register()}
                                                 />
                                                 <div className='invalid-feedback' style={{display: 'block'}}>
                                                     {errors.name && 'Please enter the amount'}
@@ -251,7 +253,7 @@ function Profile() {
                                                     className="form-control" 
                                                     value={deposit.amount}
                                                     onChange={handleChangeDeposit}
-                                                    ref={register({ required: true })}
+                                                    ref={register()}
                                                 />
                                                 <div className='invalid-feedback' style={{display: 'block'}}>
                                                     {errors.name && 'Please enter the amount'}
@@ -278,7 +280,7 @@ function Profile() {
                                                     className="form-control" 
                                                     value={withdraw.amount}
                                                     onChange={handleChangeWithdraw}
-                                                    ref={register({ required: true })}
+                                                    ref={register()}
                                                 />
                                                 <div className='invalid-feedback' style={{display: 'block'}}>
                                                     {errors.name && 'Please enter the amount'}
@@ -309,7 +311,7 @@ function Profile() {
                                                     className="form-control" 
                                                     value={address.address}
                                                     onChange={handleChangeAddress}
-                                                    ref={register({ required: true })}
+                                                    ref={register()}
                                                 />
                                                 <div className='invalid-feedback' style={{display: 'block'}}>
                                                     {errors.name && 'Please enter the address'}
@@ -328,8 +330,7 @@ function Profile() {
                         <div className="row align-items-center pt-5">
                             <div className="col-lg-6 col-md-12">
                                 <div className="about-content">
-                                    <h4> Admin Distribute Profits</h4>
-                                    <input className="form-control" disabled = "disabled"></input>
+                                    <h4 className="pb-5"> Admin Distribute Profits</h4>
                                     <button type="register" className="btn btn-primary" onClick={() => {admin_distributeProfits(signer)}}>
                                         Distribute
                                     </button>

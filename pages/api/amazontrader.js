@@ -13,7 +13,7 @@ const alertContent = (failOrNot, message, selected_icon) => {
         title: failOrNot,
         text: message,
         icon: selected_icon,
-        timer: 2000,
+        timer: 3000,
         timerProgressBar: true,
         showConfirmButton: false,
     })
@@ -79,10 +79,10 @@ const admin_getBalance = async (signer) => {
   try 
   {
     const contract = new ethers.Contract(contractAmazonTrader, abiAmazon, signer);    
-    const res = await contract.getBalance();
-    return (parseInt(res._hex,16)/ 10 ** 18);
+    const balance = await contract.getBalance();
+    return parseInt(balance._hex,16);
   } catch (error) {
-		alertContent("Erro", error.reason, "warning");
+		alertContent("Erro", error, "warning");
   }  
 };
 
@@ -90,10 +90,10 @@ const admin_getSize = async (signer) => {
   try 
   {
     const contract = new ethers.Contract(contractAmazonTrader, abiAmazon, signer);    
-    const res = await contract.getSize();
-    return (parseInt(res._hex,16));
+    const size = await contract.getSize();
+    return parseInt(size._hex,16);
   } catch (error) {
-		alertContent("Erro", error.reason, "warning");
+		alertContent("Erro", error, "warning");
   }  
 };
 
@@ -120,3 +120,6 @@ module.exports = {
   admin_getSize,
   admin_removeInvestor
 };
+
+/*getBalance();
+getSize();*/
