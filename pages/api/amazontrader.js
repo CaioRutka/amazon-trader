@@ -120,6 +120,3 @@ module.exports = {
   admin_getSize,
   admin_removeInvestor
 };
-
-/*getBalance();
-getSize();*/
