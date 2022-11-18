@@ -152,8 +152,14 @@ function Navbar() {
                             </li>
 
                             <li className="nav-item">
+                                <Link href="/how-to" activeClassName="active">
+                                    <a className="nav-link">Como Investir</a>
+                                </Link>
+                            </li>
+
+                            <li className="nav-item">
                                 <Link href="/contact" activeClassName="active">
-                                    <a className="nav-link">Contact</a>
+                                    <a className="nav-link">Contato</a>
                                 </Link>
                             </li>
 

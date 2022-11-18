@@ -7,7 +7,7 @@ import Navbar from '../components/Layouts/Navbar';
 import PageBannerContent from '../components/Common/PageBannerContent';
 import Footer from '../components/Layouts/Footer';
 import { approveUSDT } from "./api/usdt";
-import { addInvestor, invest_amazon } from "./api/amazontrader";
+import { addInvestor, invest_amazon, admin_getUserBalance } from "./api/amazontrader";
 
 const invest_initial = {
     amount: "",
@@ -17,6 +17,7 @@ function Profile() {
     const [walletAddress, setWalletAddress] = useState("");
     const [signer, setSigner] = useState(undefined);
     const [invest, setInvest] = useState(invest_initial);
+    const [depositedAmount, setDepositedAmount] = useState(0);
 
     const { register, handleSubmit, errors } = useForm();
 
@@ -24,6 +25,16 @@ function Profile() {
         try {
             await approveUSDT(walletAddress, (invest.amount * 10 ** 18).toString(10), signer);
             await invest_amazon((invest.amount * 10 ** 18).toString(10), signer);            
+        } catch (error) {
+            console.log(error)
+        }
+    };
+
+    const getUserDepositAmount = async e => {
+        try {
+            const amount = await admin_getUserBalance(walletAddress, signer);
+            setDepositedAmount(amount);
+            // setNumberContractBalance(size/10**18);
         } catch (error) {
             console.log(error)
         }
@@ -96,13 +107,30 @@ function Profile() {
                     <img src="/images/bg-map.png" alt="image" />
                 </div>
 
+                <div className="container">
+                        <div className="row align-items-center">
+                            <div className="col-lg-6 col-md-12">
+                                <h3>Rendimento Atual: 8% a.m</h3>
+                                <h3>Total Depositado: {depositedAmount} USDT</h3>
+                                <h3>Ganho Diário: {depositedAmount*0.27/100} USDT/dia</h3>
+                            </div>  
+                            <div className="col-lg-6 col-md-12">
+                                <div className="about-content">
+                                    <h4 className="pb-5"> Reload Total Depositado.</h4>
+                                    <button type="register" className="btn btn-primary" onClick={() => {getUserDepositAmount()}}>
+                                        Reload
+                                    </button>
+                                </div>                              
+                            </div>
+                        </div>
+                    </div>
+
                 <div className="about-area ptb-70">
                     <div className="container">
                         <div className="row align-items-center">
                             <div className="col-lg-6 col-md-12">
                                 <div className="about-content">
-                                    <h4> Registrar sua carteira</h4>
-                                    <input className="form-control" disabled = "disabled"></input>
+                                    <h4 className="pb-5"> Registrar sua carteira</h4>
                                     <button type="register" className="btn btn-primary" onClick={() => {addInvestor(walletAddress, signer)}}>
                                         Registrar
                                     </button>
