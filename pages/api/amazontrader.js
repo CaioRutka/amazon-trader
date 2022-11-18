@@ -97,11 +97,22 @@ const admin_getSize = async (signer) => {
   }  
 };
 
-const admin_removeInvestor = async (address, signer) => {
+const admin_getUserBalance = async (walletAddress, signer) => {
   try 
   {
     const contract = new ethers.Contract(contractAmazonTrader, abiAmazon, signer);    
-    await contract.removeInvestor(address);
+    const res = await contract.investors(walletAddress);
+    return parseInt(res.InvestorDepositedAmount._hex, 16);
+  } catch (error) {
+		alertContent("Erro", error, "warning");
+  }  
+};
+
+const admin_removeInvestor = async (walletAddress, signer) => {
+  try 
+  {
+    const contract = new ethers.Contract(contractAmazonTrader, abiAmazon, signer);    
+    await contract.removeInvestor(walletAddress);
 	  alertContent("Parabens!", "Comando enviado com sucesso!", "success");
   } catch (error) {
 		alertContent("Erro", error.reason, "warning");
@@ -118,5 +129,6 @@ module.exports = {
   admin_ownerDeposit,
   admin_getBalance,
   admin_getSize,
-  admin_removeInvestor
+  admin_removeInvestor,
+  admin_getUserBalance
 };
