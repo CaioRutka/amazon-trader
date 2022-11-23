@@ -22,7 +22,7 @@ class AboutContent extends Component {
                             <div className="about-content">
                                 <span>Como tudo começou</span>
                                 <h2>Rentabilidade, rápida e fácil.</h2>
-                                <p>Imagine um dia no qual você tenha uma lista de 15 coisas para executar durante as próximas 12 horas. Por qual delas você começa? Como você vai avançando na execução das tarefas no decorrer do dia? O que queremos mostrar para você é que investir melhor pode estar no topo das tarefas mais fáceis da sua rotina. </p>
+                                <p>Venha fazer parte desta plataforma de investimentos, onde o seu lucro é diario e creditado de forma 100% automatica, cinco dias por semana, direto em sua wallet cadastrada.</p>
                                 </div>
                         </div>
 

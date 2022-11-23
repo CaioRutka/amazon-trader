@@ -33,7 +33,7 @@ const alertContent2 = (username) => {
 
 // Form initial state
 const INITIAL_STATE = {
-    email: "",
+    username: "",
     password: "",
 };
 
@@ -53,8 +53,8 @@ const Login = () => {
         try {
             localStorage.clear();
             const url = `${baseUrl}/user/login`;
-            const { email, password } = login_credentials;
-            const payload = { email, password };
+            const { username, password } = login_credentials;
+            const payload = { username, password };
             await axios
                 .post(url, payload)
                 .then((response) => {
@@ -62,8 +62,7 @@ const Login = () => {
                     alertContent1();  
                     router.back();  
                  } else if (response.data.status == 'ACHOU') {
-                    localStorage.setItem("mykey",response.data._id);
-                    console.log(localStorage.getItem("mykey"))
+                    localStorage.setItem("user_id",response.data._id);
                     alertContent2();       
                     router.back();             
                 }
@@ -98,8 +97,8 @@ const Login = () => {
                                         <p>Não tem conta? <Link href="/sign-up"><a>Sign up</a></Link></p>
                                         <form onSubmit={handleSubmit(onSubmit)}>
                                             <div className="form-group">
-                                                <input type="email" name="email" id="email" placeholder="Endereço de Email" className="form-control"
-                                                value={login_credentials.email}
+                                                <input type="username" name="username" id="username" placeholder="Username" className="form-control"
+                                                value={login_credentials.username}
                                                 onChange={handleChange}
                                                 ref={register({ required: true })}
                                             />

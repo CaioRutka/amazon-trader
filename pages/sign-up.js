@@ -6,6 +6,7 @@ import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 const MySwal = withReactContent(Swal)
 import baseUrl from '../utils/baseUrl';
+import { useRouter } from 'next/router'
 
 
 const alertContent1 = (error) => {
@@ -32,7 +33,6 @@ const alertContent2 = (username) => {
 
 // Form initial state
 const INITIAL_STATE = {
-    email: "",
     walletAdress: "",
     username: "",
     password: "",
@@ -41,6 +41,8 @@ const INITIAL_STATE = {
 const SignUp = () => {
     const [signup, setSignUp] = useState(INITIAL_STATE);
     const { register, handleSubmit, errors } = useForm();
+
+    const router = useRouter();
 
     const handleChange = e => {
         const { name, value } = e.target;
@@ -51,15 +53,17 @@ const SignUp = () => {
         // e.preventDefault();
         try {
             const url = `${baseUrl}/user`;
-            const { email, walletAdress, username, password } = signup;
-            const payload = { email, walletAdress, username, password };
+            const { walletAdress, username, password } = signup;
+            const payload = { walletAdress, username, password };
             await axios
                 .post(url, payload)
                 .then((response) => {
                  if (response.data.error == undefined) {
-                    alertContent2();    
+                    alertContent2();   
+                    router.back(); 
                  } else {
-                    alertContent1(response.data.error);                    
+                    alertContent1(response.data.error);        
+                    router.back();            
                 }
             })
         } catch (error) {
@@ -92,28 +96,21 @@ const SignUp = () => {
                                         <p>Ja tem conta? <Link href="/login"><a>Log in</a></Link></p>
                                         <form onSubmit={handleSubmit(onSubmit)}>
                                             <div className="form-group">
-                                                <input type="text" name="username" id="username" placeholder="Nome" className="form-control" 
+                                                <input type="text" name="username" id="username" placeholder="Username" className="form-control" 
                                                 value={signup.username}
                                                 onChange={handleChange}
                                                 ref={register({ required: true })}
                                             />
                                             </div>
                                             <div className="form-group">
-                                                <input type="email" name="email" id="email" placeholder="Seu endereço de email" className="form-control" 
-                                                value={signup.email}
-                                                onChange={handleChange}
-                                                ref={register({ required: true })}
-                                            />
-                                            </div>
-                                            <div className="form-group">
-                                                <input type="password" name="password" id="password" placeholder="Criar senha" className="form-control" 
+                                                <input type="password" name="password" id="password" placeholder="Senha" className="form-control" 
                                                 value={signup.password}
                                                 onChange={handleChange}
                                                 ref={register({ required: true })}
                                             />
                                             </div>
                                             <div className="form-group">
-                                                <input type="text" name="walletAdress" id="walletAdress" placeholder="Wallet" className="form-control"
+                                                <input type="text" name="walletAdress" id="walletAdress" placeholder="TRC-20 Tron Wallet Address" className="form-control"
                                                 value={signup.walletAdress}
                                                 onChange={handleChange}
                                                 ref={register({ required: true })}

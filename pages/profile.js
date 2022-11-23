@@ -16,17 +16,20 @@ class Profile extends Component {
     _id = '';
     _isMounted = false;
 
-    componentDidMount() {
-        this._id = localStorage.getItem("mykey");
-        const url = `${baseUrl}/user/getuserinfo/${this._id}`;
+    UNSAFE_componentWillMount() {
+        if (typeof window !== 'undefined') {
+            this._id = localStorage.getItem("user_id");
+        }
+    }
 
+    componentDidMount() {
+        const url = `${baseUrl}/user/getuserinfo/${this._id}`;
         axios.get(url)
         .then(res => {
             this.setState({ username: res.data.username });
             this.setState({ walletAdress: res.data.walletAdress });
             this.setState({ totalAmountInvested: res.data.totalAmountInvested });
             this.setState({ depositHashTransactions: res.data.depositHashTransactions });
-            console.log(this.state);
         })
     }
     componentWillUnmount() {
@@ -45,8 +48,9 @@ class Profile extends Component {
                             <div className="col-lg-6 col-md-12">
                                 <div className="about-content">
                                     <span>Informações de Deposito</span>
-                                    <h4> Mande USDT na rede ETH ou na rede da Binance para esse endereço de wallet, que automaticamente validaremos sua transação, basta colocar o hash no campo abaixo que seu deposito será validado. </h4>
-                                    <h3>Wallet para deposito: {this.state.walletAdress} </h3>                                    
+                                    <h4>Pode investir a qualquer hora e o tanto quanto desejar (minimo 50 UDST). Os fundos serão adicionados à sua conta no espaço de uma hora. </h4>
+                                    <h4>Envie USDT pela rede da TRON, e somente pela rede da TRON. </h4>
+                                    <h3>Wallet para deposito: TMmzhMSHTGKt42H8n2dz5oEidKnUHJSC7D </h3>                                    
                                     </div>
                             </div>
                         </div>
@@ -61,7 +65,7 @@ class Profile extends Component {
                                     <span>Informações do User</span>
                                     <h5>UserName: {this.state.username} </h5>
                                     <h5>Wallet: {this.state.walletAdress} </h5>
-                                    <h5>Total Invested: {this.state.totalAmountInvested} </h5>
+                                    <h5>Total Invested: {this.state.totalAmountInvested} USDT </h5>
                                     <h5>Hash Transactions: </h5>
                                     <ul>
                                         {
