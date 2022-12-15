@@ -1,5 +1,5 @@
 const baseUrl = process.env.NODE_ENV === "production" 
-? 'http://159.223.199.216' 
-: 'http://159.223.199.216';
+? 'https://amazon-trader-api.herokuapp.com/' 
+: 'https://amazon-trader-api.herokuapp.com/';
 
 export default baseUrl;
