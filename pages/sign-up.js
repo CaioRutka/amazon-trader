@@ -53,6 +53,7 @@ const SignUp = () => {
         // e.preventDefault();
         try {
             const url = `${baseUrl}/user`;
+            console.log(url)
             const { walletAdress, username, password } = signup;
             const payload = { walletAdress, username, password };
             await axios
