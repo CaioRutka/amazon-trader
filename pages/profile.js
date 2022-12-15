@@ -4,6 +4,9 @@ import Navbar from '../components/Layouts/Navbar';
 import PageBannerContent from '../components/Common/PageBannerContent';
 import Footer from '../components/Layouts/Footer';
 import baseUrl from '../utils/baseUrl';
+import QRCode from '../components/Common/qrcode';
+
+const depositWallet = "TMmzhMSHTGKt42H8n2dz5oEidKnUHJSC7D";
 
 class Profile extends Component {
     state = {
@@ -48,9 +51,11 @@ class Profile extends Component {
                             <div className="col-lg-6 col-md-12">
                                 <div className="about-content">
                                     <span>Informações de Deposito</span>
-                                    <h4>Pode investir a qualquer hora e o tanto quanto desejar (minimo 50 UDST). Os fundos serão adicionados à sua conta no espaço de uma hora. </h4>
+                                    <h4>É possivel investir a qualquer hora e o tanto quanto desejar (minimo 50 UDST).</h4>
+                                    <h4> Os fundos serão adicionados à sua conta no espaço de uma hora. </h4>
                                     <h4>Envie USDT pela rede da TRON, e somente pela rede da TRON. </h4>
-                                    <h3>Wallet para deposito: TMmzhMSHTGKt42H8n2dz5oEidKnUHJSC7D </h3>                                    
+                                    <h3>Wallet para deposito: {depositWallet} </h3>     
+                                    <QRCode></QRCode>                         
                                     </div>
                             </div>
                         </div>
